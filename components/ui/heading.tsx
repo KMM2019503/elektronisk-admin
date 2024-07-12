@@ -1,6 +1,6 @@
 interface Props {
   title: string;
-  desc: string;
+  desc?: string;
 }
 
 const Heading = ({ ...props }: Props) => {

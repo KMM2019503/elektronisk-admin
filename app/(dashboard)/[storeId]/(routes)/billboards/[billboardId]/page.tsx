@@ -12,17 +12,13 @@ const BillboardPage = async ({
     },
   });
 
-  if (!billboard) {
-    return (
-      <>
-        <div className="container pt-2 flex flex-col">
-          <BillboardForm />
-        </div>
-      </>
-    );
-  }
-
-  return <div className="container pt-2 flex flex-col">BillboardPage</div>;
+  return (
+    <>
+      <div className="container pt-2 flex flex-col">
+        <BillboardForm initialData={billboard} />
+      </div>
+    </>
+  );
 };
 
 export default BillboardPage;
