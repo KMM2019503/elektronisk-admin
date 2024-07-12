@@ -22,6 +22,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import AlertModal from "@/components/modals/alert-modal";
+import ApiAlert from "@/components/ui/api-alert";
+import useOrigin from "@/hooks/useOrigin";
 
 interface SettingFormProps {
   initialData: Store;
@@ -38,6 +40,8 @@ const SettingForm = ({ initialData }: SettingFormProps) => {
   const params = useParams();
   const [open, setOpen] = useState(false);
   const [Loading, setLoading] = useState(false);
+
+  const origin = useOrigin();
   const form = useForm<SettingFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData,
@@ -114,8 +118,8 @@ const SettingForm = ({ initialData }: SettingFormProps) => {
         onComfirm={handleDelete}
         loading={Loading}
       />
+      {/* Heading */}
       <div className="flex items-center justify-between">
-        {/* Heading */}
         <Heading title="Settings" desc={`Customize ${initialData.name}`} />
 
         <Button
@@ -128,37 +132,48 @@ const SettingForm = ({ initialData }: SettingFormProps) => {
         </Button>
       </div>
       <Separator />
-      <div className="flex justify-center items-center">
+      {/* Update Form */}
+      <div className="flex justify-start items-center">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex items-center justify-between"
+            className="flex flex-col items-start justify-start gap-4"
           >
-            <div className="grid grid-cols-3 gap-8">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormMessage />
-                    <FormControl>
-                      <Input
-                        disabled={Loading}
-                        placeholder="Store Name"
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <Button type="submit" size={"lg"} disabled={Loading}>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormMessage />
+                  <FormControl>
+                    <Input
+                      disabled={Loading}
+                      placeholder="Store Name"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              size={"sm"}
+              disabled={Loading}
+              className="self-end"
+            >
               {Loading ? "Loading..." : "Update Store"}
             </Button>
           </form>
         </Form>
       </div>
+      <Separator />
+      <ApiAlert
+        title="NEXT_PUBLIC_API"
+        desc={`${origin}/stores/${params.storeId}`}
+        varient="public"
+      />
     </>
   );
 };

@@ -18,9 +18,14 @@ const MainNav = ({
       isActive: pathname === `/${params.storeId}`,
     },
     {
-      href: `${params.storeId}/settings`,
+      href: `/${params.storeId}/settings`,
       label: "Settings",
       isActive: pathname === `/${params.storeId}/settings`,
+    },
+    {
+      href: `/${params.storeId}/billboards`,
+      label: "Billboard",
+      isActive: pathname === `/${params.storeId}/billboards`,
     },
   ];
 
