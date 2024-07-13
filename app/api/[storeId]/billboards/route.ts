@@ -54,7 +54,9 @@ export async function GET(
 ) {
   try {
     if (!params.storeId)
-      return new NextResponse("User Id Not Found", { status: 401 });
+      return new NextResponse("Store Id Not Found In Your Request", {
+        status: 401,
+      });
 
     const store = await prismadb.store.findFirst({
       where: {
@@ -66,13 +68,13 @@ export async function GET(
       return new NextResponse("Store Not Found", { status: 400 });
     }
 
-    const billboard = await prismadb.billboard.findMany({
+    const billboards = await prismadb.billboard.findMany({
       where: {
         storeId: params.storeId,
       },
     });
 
-    return NextResponse.json(billboard);
+    return NextResponse.json(billboards);
   } catch (error) {
     console.log("🚀 ~ error:", error);
     return new NextResponse("Internal Server Error", { status: 500 });

@@ -79,7 +79,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
       toast({
         title: toastMessage,
       });
-      router.push(`/api/${params.storeId}/billboards`);
+      router.push(`/${params.storeId}/billboards`);
     } catch (error: any) {
       toast({
         title: `Failed : ${error.message}`,
@@ -115,7 +115,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
       });
 
       router.refresh();
-      router.push("/");
+      router.push(`/${params.storeId}/billboards`);
     } catch (error) {
       setOpen(false);
       toast({
