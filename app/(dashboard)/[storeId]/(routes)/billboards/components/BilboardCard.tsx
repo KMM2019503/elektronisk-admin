@@ -16,6 +16,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import AlertModal from "@/components/modals/alert-modal";
+import Image from "next/image";
 
 const BilboardCard = ({ billboard }: { billboard: Billboard }) => {
   const router = useRouter();
@@ -87,18 +88,66 @@ const BilboardCard = ({ billboard }: { billboard: Billboard }) => {
         </CardHeader>
 
         <CardContent>
-          <div className="w-full aspect-w-16 aspect-h-9 relative overflow-hidden rounded-lg">
-            <CldImage
+          <div className="w-full flex items-center justify-around gap-5">
+            <div className="relative overflow-hidden rounded-sm w-[250px] h-[250px] md:w-[100px] md:h-[100px] mx-auto lg:mx-0">
+              {/* <CldImage
               width={300}
               height={300}
               crop={"fill"}
               src={billboard.imgUrl}
               sizes="300px"
               alt="Description of my image"
-            />
+              className="w-[300px] h-[300px] lg:w[100px] lg:w[100px]"
+            /> */}
+              <Image
+                src={billboard.imgUrl}
+                fill
+                alt={billboard.label}
+                className="object-fill"
+              />
+            </div>
+
+            <div className="md:flex flex-col gap-2 hidden">
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => {
+                    router.push(
+                      `/${params.storeId}/billboards/${billboard.id}`
+                    );
+                  }}
+                  variant="default"
+                  type="button"
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="destructive"
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                >
+                  Detele
+                </Button>
+              </div>
+
+              <Button
+                onClick={() => {
+                  navigator.clipboard.writeText(billboard.id);
+                  toast({
+                    title: "Billboard id copied from clipboard",
+                  });
+                }}
+                variant="outline"
+                type="button"
+                size={"lg"}
+              >
+                Copy ID
+              </Button>
+            </div>
           </div>
         </CardContent>
-        <CardFooter className="gap-3 flex justify-end items-center">
+        <CardFooter className="gap-3 flex justify-end items-center md:hidden">
           <Button
             onClick={() => {
               navigator.clipboard.writeText(billboard.id);

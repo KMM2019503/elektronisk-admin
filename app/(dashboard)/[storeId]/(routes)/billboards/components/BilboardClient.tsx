@@ -8,6 +8,8 @@ import { Separator } from "@/components/ui/separator";
 import { useParams, useRouter } from "next/navigation";
 import BilboardCard from "./BilboardCard";
 import { Billboard } from "@prisma/client";
+import { Input } from "@/components/ui/input";
+import BillboardApi from "./BillboardApi";
 
 interface BillboardClientProps {
   billboards: Billboard[];
@@ -16,34 +18,22 @@ interface BillboardClientProps {
 const BilboardClient = ({ billboards }: BillboardClientProps) => {
   const router = useRouter();
   const { storeId } = useParams();
-  // const [billboards, setBillboards] = useState<Billboard[]>([]);
-  // const [loading, setLoading] = useState(true);
-
-  // const fetchBillboards = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const res = await fetch(`/api/${storeId}/billboards`);
-  //     if (res.ok) {
-  //       const data = await res.json();
-  //       setBillboards(data);
-  //     } else {
-  //       throw new Error("Failed to fetch billboards");
-  //     }
-  //   } catch (error) {
-  //     console.log("🚀 ~ fetchBillboards ~ error:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchBillboards();
-  // }, [storeId]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const title =
     billboards.length > 0
       ? `Billboards(${billboards.length})`
       : "Billboards(...)";
+
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredBillboards = billboards.filter((billboard) =>
+    billboard.label.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <>
@@ -52,18 +42,28 @@ const BilboardClient = ({ billboards }: BillboardClientProps) => {
         <Button
           onClick={() => router.push(`/${storeId}/billboards/new`)}
           size={"sm"}
-          className="bg-green-500 hover:bg-green-600"
         >
           <FaPlus />
         </Button>
       </div>
       <Separator />
-
-      <div className="grid justify-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-3 gap-5">
-        {billboards?.map((billboard) => (
+      <div className="flex mt-5">
+        <Input
+          placeholder="Search billboard..."
+          className="lg:w-[50%]"
+          onChange={handleSearchInputChange}
+          value={searchQuery}
+        />
+      </div>
+      <div className="grid justify-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 my-3 gap-5 md:max-h-[280px] md:overflow-y-auto">
+        {filteredBillboards?.map((billboard) => (
           <BilboardCard key={billboard.id} billboard={billboard} />
         ))}
       </div>
+      <Separator />
+
+      {/* Api Show Case */}
+      <BillboardApi />
     </>
   );
 };
