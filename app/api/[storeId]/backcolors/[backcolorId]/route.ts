@@ -2,45 +2,45 @@ import prismadb from "@/lib/PrismaDB";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-// Get billboard with unique ID
+// Get backcolor with unique ID
 export async function GET(
   req: Request,
-  { params }: { params: { billboardId: string } }
+  { params }: { params: { backcolorId: string } }
 ) {
   try {
-    const billboard = await prismadb.billboard.findFirst({
+    const backcolor = await prismadb.backcolor.findFirst({
       where: {
-        id: params.billboardId,
+        id: params.backcolorId,
       },
     });
 
-    return NextResponse.json(billboard);
+    return NextResponse.json(backcolor);
   } catch (error) {
     console.log("🚀 ~ error:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
 
-// Update Billboards
+// Update backcolor
 export async function PATCH(
   req: Request,
-  { params }: { params: { storeId: string; billboardId: string } }
+  { params }: { params: { storeId: string; backcolorId: string } }
 ) {
   try {
     const { userId } = auth();
     const body = await req.json();
-    const { label, imgUrl } = body;
+    const { color, value } = body;
 
     if (!userId) return new NextResponse("User not found", { status: 401 });
 
     // Checking state
     if (!params.storeId)
       return new NextResponse("Store Id Not Found", { status: 401 });
-    if (!params.billboardId)
-      return new NextResponse("billboard Id Not Found", { status: 400 });
+    if (!params.backcolorId)
+      return new NextResponse("Backcolor Id Not Found", { status: 400 });
 
-    if (!label) return new NextResponse("Label Not Found", { status: 400 });
-    if (!imgUrl) return new NextResponse("Image Not Found", { status: 400 });
+    if (!color) return new NextResponse("Color Not Found", { status: 400 });
+    if (!value) return new NextResponse("Value Not Found", { status: 400 });
 
     const store = await prismadb.store.findFirst({
       where: {
@@ -53,27 +53,27 @@ export async function PATCH(
       return new NextResponse("Unauthorized Update", { status: 403 });
     }
 
-    const billboard = await prismadb.billboard.updateMany({
+    const backcolor = await prismadb.backcolor.updateMany({
       where: {
-        id: params.billboardId,
+        id: params.backcolorId,
       },
       data: {
-        label: label,
-        imgUrl: imgUrl,
+        color: color,
+        value: value,
       },
     });
 
-    return NextResponse.json(billboard);
+    return NextResponse.json(backcolor);
   } catch (error) {
     console.log("🚀 ~ error:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
 
-// Delte billboard
+// Delte Backcolor
 export async function DELETE(
   req: Request,
-  { params }: { params: { storeId: string; billboardId: string } }
+  { params }: { params: { storeId: string; backcolorId: string } }
 ) {
   try {
     const { userId } = auth();
@@ -84,8 +84,8 @@ export async function DELETE(
 
     if (!params.storeId)
       return new NextResponse("Store Id Not Found", { status: 401 });
-    if (!params.billboardId)
-      return new NextResponse("billboard Id Not Found", { status: 400 });
+    if (!params.backcolorId)
+      return new NextResponse("Backcolor Id Not Found", { status: 400 });
 
     const store = await prismadb.store.findFirst({
       where: {
@@ -98,13 +98,13 @@ export async function DELETE(
       return new NextResponse("Unauthorized Delete", { status: 403 });
     }
 
-    const billboard = await prismadb.billboard.deleteMany({
+    const backcolor = await prismadb.backcolor.deleteMany({
       where: {
-        id: params.billboardId,
+        id: params.backcolorId,
       },
     });
 
-    return NextResponse.json(billboard);
+    return NextResponse.json(backcolor);
   } catch (error) {
     console.error("🚀 ~ error:", error);
     return new NextResponse("Internal Server Error", { status: 500 });

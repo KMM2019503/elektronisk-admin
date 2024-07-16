@@ -2,45 +2,47 @@ import prismadb from "@/lib/PrismaDB";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-// Get billboard with unique ID
+// Get Category by unique ID
 export async function GET(
   req: Request,
-  { params }: { params: { billboardId: string } }
+  { params }: { params: { categoriesId: string } }
 ) {
   try {
-    const billboard = await prismadb.billboard.findFirst({
+    const category = await prismadb.category.findFirst({
       where: {
-        id: params.billboardId,
+        id: params.categoriesId,
       },
     });
 
-    return NextResponse.json(billboard);
+    return NextResponse.json(category);
   } catch (error) {
     console.log("🚀 ~ error:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
 
-// Update Billboards
+// Update Category
 export async function PATCH(
   req: Request,
-  { params }: { params: { storeId: string; billboardId: string } }
+  { params }: { params: { storeId: string; categoriesId: string } }
 ) {
   try {
     const { userId } = auth();
     const body = await req.json();
-    const { label, imgUrl } = body;
+    const { name, billboardId } = body;
 
     if (!userId) return new NextResponse("User not found", { status: 401 });
 
     // Checking state
     if (!params.storeId)
       return new NextResponse("Store Id Not Found", { status: 401 });
-    if (!params.billboardId)
-      return new NextResponse("billboard Id Not Found", { status: 400 });
+    if (!params.categoriesId)
+      return new NextResponse("Category Id Not Found", { status: 400 });
 
-    if (!label) return new NextResponse("Label Not Found", { status: 400 });
-    if (!imgUrl) return new NextResponse("Image Not Found", { status: 400 });
+    if (!name)
+      return new NextResponse("Category Name Not Found", { status: 400 });
+    if (!billboardId)
+      return new NextResponse("Billboard Id Not Found", { status: 400 });
 
     const store = await prismadb.store.findFirst({
       where: {
@@ -53,27 +55,38 @@ export async function PATCH(
       return new NextResponse("Unauthorized Update", { status: 403 });
     }
 
-    const billboard = await prismadb.billboard.updateMany({
+    const billboard = await prismadb.billboard.findFirst({
       where: {
-        id: params.billboardId,
-      },
-      data: {
-        label: label,
-        imgUrl: imgUrl,
+        id: billboardId,
       },
     });
 
-    return NextResponse.json(billboard);
+    if (!billboard) {
+      return new NextResponse("Billboard Not Found", { status: 400 });
+    }
+
+    const category = await prismadb.category.updateMany({
+      where: {
+        id: params.categoriesId,
+      },
+      data: {
+        name: name,
+        billboardId: billboardId,
+        updatedAt: new Date(),
+      },
+    });
+
+    return NextResponse.json(category);
   } catch (error) {
     console.log("🚀 ~ error:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
 
-// Delte billboard
+// Delte Category
 export async function DELETE(
   req: Request,
-  { params }: { params: { storeId: string; billboardId: string } }
+  { params }: { params: { storeId: string; categoriesId: string } }
 ) {
   try {
     const { userId } = auth();
@@ -84,8 +97,8 @@ export async function DELETE(
 
     if (!params.storeId)
       return new NextResponse("Store Id Not Found", { status: 401 });
-    if (!params.billboardId)
-      return new NextResponse("billboard Id Not Found", { status: 400 });
+    if (!params.categoriesId)
+      return new NextResponse("Category Id Id Not Found", { status: 400 });
 
     const store = await prismadb.store.findFirst({
       where: {
@@ -98,15 +111,15 @@ export async function DELETE(
       return new NextResponse("Unauthorized Delete", { status: 403 });
     }
 
-    const billboard = await prismadb.billboard.deleteMany({
+    const category = await prismadb.category.deleteMany({
       where: {
-        id: params.billboardId,
+        id: params.categoriesId,
       },
     });
 
-    return NextResponse.json(billboard);
+    return NextResponse.json(category);
   } catch (error) {
-    console.error("🚀 ~ error:", error);
+    console.error("🚀 ~ error At Category Detele:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

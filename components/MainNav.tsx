@@ -27,6 +27,16 @@ const MainNav = ({
       label: "Billboard",
       isActive: pathname === `/${params.storeId}/billboards`,
     },
+    {
+      href: `/${params.storeId}/categories`,
+      label: "Category",
+      isActive: pathname === `/${params.storeId}/categories`,
+    },
+    {
+      href: `/${params.storeId}/backcolors`,
+      label: "Back Colors",
+      isActive: pathname === `/${params.storeId}/backcolors`,
+    },
   ];
 
   return (
