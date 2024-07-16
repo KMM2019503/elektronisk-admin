@@ -1,32 +1,34 @@
 "use client";
 
 import React, { useState } from "react";
-import { Category as CategoryType, Billboard } from "@prisma/client";
 import { useParams, useRouter } from "next/navigation";
+import { Backcolor, Category, Product as ProductType } from "@prisma/client";
 
+import { FaPlus } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
-import { FaPlus } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
-import CategoryCard from "./CategroyCard";
-import CategoryAPi from "./CategroyApi";
 
-interface CategoryWithBillboard extends CategoryType {
-  billboard: Billboard;
+import ProductApi from "./ProductApi";
+import ProductCard from "./ProductCard";
+
+interface Product extends ProductType {
+  category: Category;
+  backcolor: Backcolor;
 }
 
-interface CategoryClientProps {
-  categories: CategoryWithBillboard[];
+interface ProductClientProps {
+  products: Product[];
 }
 
-const CategoryClient = ({ categories }: CategoryClientProps) => {
+const ProductClient = ({ products }: ProductClientProps) => {
   const router = useRouter();
   const { storeId } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
 
   const title =
-    categories.length > 0 ? `Categories(${categories.length})` : "Categories";
+    products.length > 0 ? `Products(${products.length})` : "Products";
 
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -34,16 +36,16 @@ const CategoryClient = ({ categories }: CategoryClientProps) => {
     setSearchQuery(event.target.value);
   };
 
-  const filteredCategories = categories.filter((categories) =>
-    categories.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredCategories = products.filter((products) =>
+    products.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <>
       <div className="flex items-center justify-between">
-        <Heading title={title} desc="You can control your categories" />
+        <Heading title={title} desc="You can manage products" />
         <Button
-          onClick={() => router.push(`/${storeId}/categories/new`)}
+          onClick={() => router.push(`/${storeId}/products/new`)}
           size={"sm"}
         >
           <FaPlus />
@@ -59,16 +61,16 @@ const CategoryClient = ({ categories }: CategoryClientProps) => {
         />
       </div>
       <div className="grid justify-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 my-3 gap-5 md:max-h-[280px] md:overflow-y-auto">
-        {filteredCategories?.map((category) => (
-          <CategoryCard key={category.id} category={category} />
+        {filteredCategories?.map((product) => (
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
       <Separator />
 
       {/* Api Show Case */}
-      <CategoryAPi />
+      <ProductApi />
     </>
   );
 };
 
-export default CategoryClient;
+export default ProductClient;

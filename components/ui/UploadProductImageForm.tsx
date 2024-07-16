@@ -3,18 +3,18 @@
 import { useEffect, useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
-import { FaTrash } from "react-icons/fa";
+import { FaImages, FaTrash } from "react-icons/fa";
 
 import { Button } from "./button";
 
 interface UploadImageFormProps {
   disable?: boolean;
-  onChange: (values: string) => void;
-  onRemove: (values: string) => void;
+  onChange: (values: string[]) => void; // Updated to accept array of strings
+  onRemove: (values: string[]) => void; // Updated to accept array of strings
   value: string[];
 }
 
-const UploadImageForm = ({
+const UploadProductImageForm = ({
   disable,
   onChange,
   onRemove,
@@ -27,7 +27,7 @@ const UploadImageForm = ({
   }, []);
 
   const onUpload = (result: any) => {
-    onChange(result.info.publicId);
+    onChange([...value, result.info.secure_url]); // Append new URL to existing array
   };
 
   if (!isMounted) {
@@ -45,7 +45,9 @@ const UploadImageForm = ({
             <div className="z-10 absolute top-2 right-2">
               <Button
                 type="button"
-                onClick={() => onRemove(url)}
+                onClick={() =>
+                  onRemove(value.filter((currentUrl) => currentUrl !== url))
+                } // Filter out the URL to be removed
                 variant={"destructive"}
                 size={"icon"}
                 className="z-50"
@@ -57,7 +59,7 @@ const UploadImageForm = ({
           </div>
         ))}
       </div>
-      <CldUploadWidget uploadPreset="wnbe67jp" onUploadAdded={onUpload}>
+      <CldUploadWidget uploadPreset="wnbe67jp" onSuccess={onUpload}>
         {({ open }) => {
           return (
             <Button onClick={() => open()} disabled={disable} type="button">
@@ -70,4 +72,4 @@ const UploadImageForm = ({
   );
 };
 
-export default UploadImageForm;
+export default UploadProductImageForm;

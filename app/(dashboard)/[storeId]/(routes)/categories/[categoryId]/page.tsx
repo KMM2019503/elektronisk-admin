@@ -17,6 +17,9 @@ const BillboardPage = async ({
     where: {
       id: params.categoryId,
     },
+    include: {
+      billboard: true,
+    },
   });
 
   return (

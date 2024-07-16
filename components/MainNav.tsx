@@ -17,11 +17,7 @@ const MainNav = ({
       label: "Home",
       isActive: pathname === `/${params.storeId}`,
     },
-    {
-      href: `/${params.storeId}/settings`,
-      label: "Settings",
-      isActive: pathname === `/${params.storeId}/settings`,
-    },
+
     {
       href: `/${params.storeId}/billboards`,
       label: "Billboard",
@@ -36,6 +32,16 @@ const MainNav = ({
       href: `/${params.storeId}/backcolors`,
       label: "Back Colors",
       isActive: pathname === `/${params.storeId}/backcolors`,
+    },
+    {
+      href: `/${params.storeId}/products`,
+      label: "Products",
+      isActive: pathname === `/${params.storeId}/products`,
+    },
+    {
+      href: `/${params.storeId}/settings`,
+      label: "Settings",
+      isActive: pathname === `/${params.storeId}/settings`,
     },
   ];
 

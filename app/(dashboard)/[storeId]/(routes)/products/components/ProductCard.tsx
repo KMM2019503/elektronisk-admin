@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Category as CategoryType, Billboard } from "@prisma/client";
+import { Backcolor, Category, Product as ProductType } from "@prisma/client";
 
 import { toast } from "@/components/ui/use-toast";
 
@@ -20,15 +20,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-interface CategoryWithBillboard extends CategoryType {
-  billboard: Billboard;
+interface Product extends ProductType {
+  category: Category;
+  backcolor: Backcolor;
 }
 
-interface CategoryFormProps {
-  category: CategoryWithBillboard;
-}
-
-const CategroyCard = ({ category }: CategoryFormProps) => {
+const ProductCard = ({ product }: { product: Product }) => {
   const router = useRouter();
   const params = useParams();
 
@@ -38,15 +35,12 @@ const CategroyCard = ({ category }: CategoryFormProps) => {
   const handleDelete = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(
-        `/api/${params.storeId}/categories/${category.id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await fetch(`/api/${params.storeId}/products/${product.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!res.ok) {
         throw new Error("Failed to delete");
@@ -81,17 +75,31 @@ const CategroyCard = ({ category }: CategoryFormProps) => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-center justify-around gap-3 md:gap-0">
             <div className="flex flex-col gap-2">
-              <CardTitle>{category.name}</CardTitle>
+              <CardTitle>
+                {product.name} - {product.price.toString()}
+              </CardTitle>
               <CardDescription>
-                BillBoard : {category.billboard.label}
+                <div className="flex items-center gap-2 font-bold">
+                  {product.category.name}
+                </div>
               </CardDescription>
               <CardDescription>
-                Created At:{" "}
-                {new Date(category.createdAt).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                <div className="flex items-center gap-2 font-bold">
+                  <div
+                    className="size-6 rounded-full "
+                    style={{ backgroundColor: product.backcolor.value }}
+                  />
+                </div>
+              </CardDescription>
+              <CardDescription>
+                <div className="flex items-center gap-2 font-bold">
+                  Created At:{" "}
+                  {new Date(product.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </div>
               </CardDescription>
             </div>
             <div className="flex w-full md:w-auto justify-end items-end">
@@ -110,7 +118,7 @@ const CategroyCard = ({ category }: CategoryFormProps) => {
                     <Button
                       onClick={() => {
                         router.push(
-                          `/${params.storeId}/categories/${category.id}`
+                          `/${params.storeId}/products/${product.id}`
                         );
                       }}
                       variant="default"
@@ -129,9 +137,9 @@ const CategroyCard = ({ category }: CategoryFormProps) => {
                     </Button>
                     <Button
                       onClick={() => {
-                        navigator.clipboard.writeText(category.id);
+                        navigator.clipboard.writeText(product.id);
                         toast({
-                          title: "Category ID copied to clipboard",
+                          title: "product ID copied to clipboard",
                         });
                       }}
                       variant="outline"
@@ -151,4 +159,4 @@ const CategroyCard = ({ category }: CategoryFormProps) => {
   );
 };
 
-export default CategroyCard;
+export default ProductCard;

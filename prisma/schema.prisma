@@ -20,6 +20,7 @@ model Store {
   billboards Billboard[] @relation("StoreToBillboard")
   categories Category[]  @relation("StoreToCategory")
   backcolors Backcolor[] @relation("StoreToBackcolor")
+  products   Product[]   @relation("StoreToProduct")
   userId     String
   createdAt  DateTime    @default(now())
   updatedAt  DateTime
@@ -44,6 +45,7 @@ model Category {
   store       Store     @relation("StoreToCategory", fields: [storeId], references: [id])
   billboardId String
   billboard   Billboard @relation(fields: [billboardId], references: [id])
+  products    Product[] @relation("CategoryToProduct")
   name        String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime
@@ -53,13 +55,46 @@ model Category {
 }
 
 model Backcolor {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   storeId   String
-  store     Store    @relation("StoreToBackcolor", fields: [storeId], references: [id])
+  store     Store     @relation("StoreToBackcolor", fields: [storeId], references: [id])
+  products  Product[]
   color     String
   value     String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   updatedAt DateTime
 
   @@index([storeId])
+}
+
+model Product {
+  id          String    @id @default(uuid())
+  storeId     String
+  store       Store     @relation("StoreToProduct", fields: [storeId], references: [id])
+  categoryId  String
+  category    Category  @relation("CategoryToProduct", fields: [categoryId], references: [id])
+  backcolorId String
+  backcolor   Backcolor @relation(fields: [backcolorId], references: [id])
+  name        String
+  price       Decimal
+  isFeatured  Boolean   @default(false)
+  isAchived   Boolean   @default(false)
+  images      Image[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([storeId])
+  @@index([categoryId])
+  @@index([backcolorId])
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
 }

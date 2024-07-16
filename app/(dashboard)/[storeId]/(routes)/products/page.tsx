@@ -1,20 +1,22 @@
 import React from "react";
 import prismadb from "@/lib/PrismaDB";
-import CategoryClient from "./components/CategroyClient";
+
+import ProductClient from "./components/ProductClient";
 
 const Category = async ({ params }: { params: { storeId: string } }) => {
-  const categories = await prismadb.category.findMany({
+  const products = await prismadb.product.findMany({
     where: {
       storeId: params.storeId.toString(),
     },
     include: {
-      billboard: true,
+      category: true,
+      backcolor: true,
     },
   });
 
   return (
     <section className="container pt-2 flex flex-col">
-      <CategoryClient categories={categories} />
+      <ProductClient products={products} />
     </section>
   );
 };
