@@ -71,26 +71,32 @@ const ProductCard = ({ product }: { product: Product }) => {
         onComfirm={handleDelete}
         loading={isLoading}
       />
-      <Card className="max-w-[350px]">
+      <Card className="max-w-[400px]">
         <CardHeader>
-          <div className="flex flex-col md:flex-row items-center justify-around gap-3 md:gap-0">
+          <div className="flex flex-col md:flex-row items-center justify-around gap-2 ">
             <div className="flex flex-col gap-2">
               <CardTitle>
-                {product.name} - {product.price.toString()}
+                {product.name} - {product.price.toString()} $
               </CardTitle>
+
               <CardDescription>
                 <div className="flex items-center gap-2 font-bold">
-                  {product.category.name}
+                  Category
+                  <div className="flex items-center gap-2 font-bold">
+                    {product.category.name}
+                  </div>
                 </div>
               </CardDescription>
               <CardDescription>
                 <div className="flex items-center gap-2 font-bold">
+                  Color
                   <div
                     className="size-6 rounded-full "
                     style={{ backgroundColor: product.backcolor.value }}
                   />
                 </div>
               </CardDescription>
+
               <CardDescription>
                 <div className="flex items-center gap-2 font-bold">
                   Created At:{" "}

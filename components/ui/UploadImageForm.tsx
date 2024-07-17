@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CldUploadWidget } from "next-cloudinary";
+import { CldUploadButton, CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import { FaTrash } from "react-icons/fa";
 
@@ -26,10 +26,6 @@ const UploadImageForm = ({
     setIsMounted(true);
   }, []);
 
-  const onUpload = (result: any) => {
-    onChange(result.info.publicId);
-  };
-
   if (!isMounted) {
     return null;
   }
@@ -37,9 +33,9 @@ const UploadImageForm = ({
   return (
     <div>
       <div className="mb-4 flex items-center gap-4">
-        {value.map((url) => (
+        {value.map((url, i) => (
           <div
-            key={url}
+            key={i}
             className="relative w-[200px] h-[200px] rounded-md overflow-hidden"
           >
             <div className="z-10 absolute top-2 right-2">
@@ -57,7 +53,12 @@ const UploadImageForm = ({
           </div>
         ))}
       </div>
-      <CldUploadWidget uploadPreset="wnbe67jp" onUploadAdded={onUpload}>
+      <CldUploadWidget
+        uploadPreset="wnbe67jp"
+        onSuccess={(result: any) => {
+          onChange(result?.info.secure_url);
+        }}
+      >
         {({ open }) => {
           return (
             <Button onClick={() => open()} disabled={disable} type="button">

@@ -193,10 +193,11 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
                     <Select
                       onValueChange={field.onChange}
                       disabled={Loading}
-                      value={initialData?.billboardId}
+                      value={field.value}
+                      defaultValue={field.value}
                     >
                       <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Billboard" />
+                        <SelectValue placeholder="Select a Billboard" />
                       </SelectTrigger>
                       <SelectContent>
                         {billboards.map((billboard, i) => (

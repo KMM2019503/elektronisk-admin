@@ -78,24 +78,29 @@ export async function POST(
         categoryId,
         backcolorId,
         storeId: params.storeId,
+        images: {
+          createMany: {
+            data: [...images.map((image: { url: string }) => image)],
+          },
+        },
         updatedAt: new Date(),
       },
     });
 
-    if (!product) {
-      return new NextResponse("Product Caretion Fail", { status: 400 });
-    }
+    // if (!product) {
+    //   return new NextResponse("Product Caretion Fail", { status: 400 });
+    // }
 
-    await Promise.all(
-      images.map(async (image: Image) => {
-        await prismadb.image.create({
-          data: {
-            url: image.url,
-            productId: product.id,
-          },
-        });
-      })
-    );
+    // await Promise.all(
+    //   images.map(async (image: Image) => {
+    //     await prismadb.image.create({
+    //       data: {
+    //         url: image.url,
+    //         productId: product.id,
+    //       },
+    //     });
+    //   })
+    // );
 
     return NextResponse.json(product);
   } catch (error) {
@@ -112,7 +117,7 @@ export async function GET(
   try {
     if (!params.storeId)
       return new NextResponse("Store Id Not Found In Your Request", {
-        status: 401,
+        status: 400,
       });
 
     const store = await prismadb.store.findFirst({
@@ -125,9 +130,26 @@ export async function GET(
       return new NextResponse("Store Not Found", { status: 400 });
     }
 
+    const { searchParams } = new URL(req.url);
+    const categoryId = searchParams.get("categoryId") || undefined;
+    const backcolorId = searchParams.get("backcolorId") || undefined;
+    const isFeatured = searchParams.get("isFeatured");
+
     const products = await prismadb.product.findMany({
       where: {
         storeId: params.storeId,
+        categoryId,
+        backcolorId,
+        isFeatured: isFeatured ? true : undefined,
+        isAchived: false,
+      },
+      include: {
+        category: true,
+        backcolor: true,
+        images: true,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 

@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Backcolor,
-  Image,
-  Category,
-  Product as ProductType,
-} from "@prisma/client";
+import { Backcolor, Image, Category, Product } from "@prisma/client";
 import { FaTrash } from "react-icons/fa";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -35,13 +31,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import UploadImageForm from "@/components/ui/UploadImageForm";
-
-interface Product extends ProductType {
-  images: Image[];
-}
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface ProductFormProps {
-  initialData: Product | null;
+  initialData:
+    | (Product & {
+        images: Image[];
+      })
+    | null;
+
   categories: Category[];
   backcolors: Backcolor[];
 }
@@ -49,7 +47,7 @@ interface ProductFormProps {
 const formSchema = z.object({
   name: z.string().min(3),
   price: z.coerce.number().min(1),
-  images: z.object({ url: z.string().min(3) }).array(),
+  images: z.object({ url: z.string() }).array(),
   categoryId: z.string().min(3),
   backcolorId: z.string().min(3),
   isFeatured: z.boolean().default(false).optional(),
@@ -93,40 +91,41 @@ const ProductForm = ({
 
   //   product update&create function
   const onSubmit = async (data: ProductFormValues) => {
-    console.log(data);
-    // const api = !initialData
-    //   ? `/api/${params.storeId}/products`
-    //   : `/api/${params.storeId}/products/${params.productId}`;
-    // const method = initialData ? "PATCH" : "POST";
+    const api = !initialData
+      ? `/api/${params.storeId}/products`
+      : `/api/${params.storeId}/products/${params.productId}`;
+    const method = initialData ? "PATCH" : "POST";
 
-    // setLoading(true);
-    // try {
-    //   const res = await fetch(api, {
-    //     method: method,
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(data),
-    //   });
+    setLoading(true);
+    try {
+      console.log(data);
+      const res = await fetch(api, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-    //   if (!res.ok) {
-    //     throw new Error(`Error: ${res.status} ${res.statusText}`);
-    //   }
+      if (!res.ok) {
+        throw new Error(`Error: ${res.status} ${res.statusText}`);
+      }
 
-    //   router.refresh();
-    //   toast({
-    //     title: toastMessage,
-    //   });
-    //   router.push(`/${params.storeId}/categories`);
-    // } catch (error: any) {
-    //   toast({
-    //     title: `Failed : ${error.message}`,
-    //     description: error.message || "An unknown error occurred",
-    //     variant: "destructive",
-    //   });
-    // } finally {
-    //   setLoading(false);
-    // }
+      router.refresh();
+      toast({
+        title: toastMessage,
+      });
+      router.push(`/${params.storeId}/products`);
+    } catch (error: any) {
+      console.log(error.message);
+      toast({
+        title: `Failed : ${error.message}`,
+        description: error.message || "An unknown error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   // delete category
@@ -153,8 +152,9 @@ const ProductForm = ({
       });
 
       router.refresh();
-      router.push(`/${params.storeId}/categories`);
+      router.push(`/${params.storeId}/products`);
     } catch (error) {
+      console.log(error);
       setOpen(false);
       toast({
         title: "Delete Failed",
@@ -175,7 +175,12 @@ const ProductForm = ({
       />
       {/* Heading */}
       <div className="flex items-center justify-between mb-2">
-        <Heading title={title} />
+        <div>
+          <Heading title={title} />
+          {initialData ? null : (
+            <p>You can upload multiple images after creating a product</p>
+          )}
+        </div>
 
         {initialData && (
           <Button
@@ -242,13 +247,14 @@ const ProductForm = ({
                     <Select
                       onValueChange={field.onChange}
                       disabled={Loading}
-                      value={initialData?.categoryId}
+                      value={field.value}
+                      defaultValue={field.value}
                     >
-                      <SelectTrigger className="w-[180px]">
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select Category" />
                       </SelectTrigger>
                       <SelectContent>
-                        {categories.map((category, i) => (
+                        {categories.map((category) => (
                           <SelectItem key={category.id} value={category.id}>
                             {category.name}
                           </SelectItem>
@@ -270,9 +276,10 @@ const ProductForm = ({
                     <Select
                       onValueChange={field.onChange}
                       disabled={Loading}
-                      value={initialData?.backcolorId}
+                      value={field.value}
+                      defaultValue={field.value}
                     >
-                      <SelectTrigger className="w-[180px]">
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a back color For the device" />
                       </SelectTrigger>
                       <SelectContent>
@@ -293,20 +300,64 @@ const ProductForm = ({
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="isFeatured"
+              render={({ field }) => (
+                <FormItem className="flex items-start space-x-3 space-y-0 border rounded-lg p-3">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      // @ts-ignore
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-2 leading-none">
+                    <FormLabel>Is Featured</FormLabel>
+                    <FormDescription>
+                      This product will appear in home Page.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isAchived"
+              render={({ field }) => (
+                <FormItem className="flex items-start space-x-3 space-y-0 border rounded-lg p-3">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      // @ts-ignore
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-2 leading-none">
+                    <FormLabel>Is Achived</FormLabel>
+                    <FormDescription>
+                      This product will not appear anyware in the store.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+
             <div className="col-span-2">
               <FormField
                 control={form.control}
                 name="images"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Product Image</FormLabel>
+                    <FormLabel>Product Images</FormLabel>
                     <FormMessage />
                     <FormControl>
                       <UploadImageForm
                         value={field.value.map((image) => image.url)}
                         disable={Loading}
                         onChange={(url) =>
-                          field.onChange([...field.value, { url: url }])
+                          field.onChange([...field.value, { url }])
                         }
                         onRemove={(url) =>
                           field.onChange([
