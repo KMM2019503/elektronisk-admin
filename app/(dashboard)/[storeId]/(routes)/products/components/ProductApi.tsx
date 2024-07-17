@@ -11,7 +11,7 @@ const ProductApi = () => {
 
   return (
     <div className="mt-3">
-      <Heading title="API For Billboards" />
+      <Heading title="API For Product" />
       <div className="flex flex-col gap-2">
         <ApiAlert
           title="GET"
