@@ -8,9 +8,12 @@ export async function GET(
   { params }: { params: { categoriesId: string } }
 ) {
   try {
-    const category = await prismadb.category.findFirst({
+    const category = await prismadb.category.findUnique({
       where: {
         id: params.categoriesId,
+      },
+      include: {
+        billboard: true,
       },
     });
 

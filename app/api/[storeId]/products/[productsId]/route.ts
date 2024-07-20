@@ -2,17 +2,22 @@ import prismadb from "@/lib/PrismaDB";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { ProductRequestBodyType } from "../route";
-import { Image } from "@prisma/client";
 
 // Get Product by unique ID
 export async function GET(
   req: Request,
-  { params }: { params: { productId: string } }
+  { params }: { params: { productsId: string } }
 ) {
   try {
-    const product = await prismadb.product.findFirst({
+    if (!params.productsId) {
+      return new NextResponse("Product Id not found", {
+        status: 400,
+      });
+    }
+
+    const product = await prismadb.product.findUnique({
       where: {
-        id: params.productId,
+        id: params.productsId,
       },
       include: {
         category: true,

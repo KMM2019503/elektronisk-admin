@@ -46,6 +46,14 @@ interface ProductFormProps {
 
 const formSchema = z.object({
   name: z.string().min(3),
+  displaySize: z.string().min(1),
+  displayType: z.string().nullable(),
+  cpu: z.string().min(1),
+  memory: z.string().min(1),
+  mainCamera: z.string().nullable(),
+  selfieCamera: z.string().nullable(),
+  batteryType: z.string().min(1),
+  chargingSpeed: z.string().nullable(),
   price: z.coerce.number().min(1),
   images: z.object({ url: z.string() }).array(),
   categoryId: z.string().min(3),
@@ -80,6 +88,14 @@ const ProductForm = ({
         }
       : {
           name: "",
+          batteryType: "",
+          chargingSpeed: null,
+          cpu: "",
+          displaySize: "",
+          displayType: null,
+          mainCamera: null,
+          selfieCamera: null,
+          memory: "",
           images: [],
           price: 0,
           categoryId: "",
@@ -98,7 +114,6 @@ const ProductForm = ({
 
     setLoading(true);
     try {
-      console.log(data);
       const res = await fetch(api, {
         method: method,
         headers: {
@@ -199,7 +214,7 @@ const ProductForm = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="grid grid-cols-2 gap-4"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-5"
           >
             <FormField
               control={form.control}
@@ -236,6 +251,153 @@ const ProductForm = ({
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="cpu"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CPU</FormLabel>
+                  <FormMessage />
+                  <FormControl>
+                    <Input
+                      disabled={Loading}
+                      placeholder="Core processor"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="memory"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Memory(RAM/ROM)</FormLabel>
+                  <FormMessage />
+                  <FormControl>
+                    <Input
+                      disabled={Loading}
+                      placeholder="Inches and Screen to body ratio"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="displaySize"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Display Size</FormLabel>
+                  <FormMessage />
+                  <FormControl>
+                    <Input
+                      disabled={Loading}
+                      placeholder="Inches and Screen to body ratio"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="displayType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Display Type</FormLabel>
+                  <FormMessage />
+                  <FormControl>
+                    <Input
+                      disabled={Loading}
+                      placeholder="Display Type of the product"
+                      {...field}
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="batteryType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Battery</FormLabel>
+                  <FormMessage />
+                  <FormControl>
+                    <Input
+                      disabled={Loading}
+                      placeholder="Battery Type(mAh)"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="chargingSpeed"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Charging Speed</FormLabel>
+                  <FormMessage />
+                  <FormControl>
+                    <Input
+                      disabled={Loading}
+                      placeholder="Charging Speed of the device"
+                      {...field}
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="mainCamera"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Main Camera</FormLabel>
+                  <FormMessage />
+                  <FormControl>
+                    <Input
+                      disabled={Loading}
+                      placeholder="Resolution of main camera"
+                      {...field}
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="selfieCamera"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Selfie Camera</FormLabel>
+                  <FormMessage />
+                  <FormControl>
+                    <Input
+                      disabled={Loading}
+                      placeholder="Resolution of SelfieCamera"
+                      {...field}
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="categoryId"
@@ -344,7 +506,7 @@ const ProductForm = ({
               )}
             />
 
-            <div className="col-span-2">
+            <div className="md:col-span-2 lg:col-span-3">
               <FormField
                 control={form.control}
                 name="images"
@@ -359,13 +521,13 @@ const ProductForm = ({
                         onChange={(url) =>
                           field.onChange([...field.value, { url }])
                         }
-                        onRemove={(url) =>
+                        onRemove={(url) => {
                           field.onChange([
                             ...field.value.filter(
                               (current) => current.url !== url
                             ),
-                          ])
-                        }
+                          ]);
+                        }}
                       />
                     </FormControl>
                   </FormItem>

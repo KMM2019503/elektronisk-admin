@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: { backcolorId: string } }
 ) {
   try {
-    const backcolor = await prismadb.backcolor.findFirst({
+    const backcolor = await prismadb.backcolor.findUnique({
       where: {
         id: params.backcolorId,
       },

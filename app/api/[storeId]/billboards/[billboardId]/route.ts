@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: { billboardId: string } }
 ) {
   try {
-    const billboard = await prismadb.billboard.findFirst({
+    const billboard = await prismadb.billboard.findUnique({
       where: {
         id: params.billboardId,
       },

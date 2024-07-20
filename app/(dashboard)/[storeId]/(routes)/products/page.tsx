@@ -13,6 +13,9 @@ const Category = async ({ params }: { params: { storeId: string } }) => {
       category: true,
       backcolor: true,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 
   const formattedProducts: Product[] = products.map((product) => ({

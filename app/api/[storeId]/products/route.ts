@@ -7,6 +7,14 @@ export interface ProductRequestBodyType {
   categoryId: string;
   backcolorId: string;
   name: string;
+  displaySize: string;
+  displayType: string | null;
+  cpu: string;
+  memory: string;
+  mainCamera: string | null;
+  selfieCamera: string | null;
+  batteryType: string;
+  chargingSpeed: string | null;
   price: number;
   isFeatured: boolean;
   isAchived: boolean;
@@ -26,6 +34,14 @@ export async function POST(
       categoryId,
       backcolorId,
       name,
+      displaySize,
+      displayType,
+      cpu,
+      memory,
+      mainCamera,
+      selfieCamera,
+      batteryType,
+      chargingSpeed,
       price,
       isFeatured,
       isAchived,
@@ -47,6 +63,13 @@ export async function POST(
       return new NextResponse("Achieved status not specified", { status: 400 });
     if (!images || images.length === 0)
       return new NextResponse("Images not found", { status: 400 });
+    if (!displaySize)
+      return new NextResponse("Display Size not found", { status: 400 });
+    if (!cpu) return new NextResponse("CPU Name require", { status: 400 });
+    if (!memory)
+      return new NextResponse("Memory (Ram & Rom) require", { status: 400 });
+    if (!batteryType)
+      return new NextResponse("Battery Type require", { status: 400 });
 
     const store = await prismadb.store.findFirst({
       where: { id: params.storeId, userId },
@@ -72,6 +95,14 @@ export async function POST(
     const product = await prismadb.product.create({
       data: {
         name,
+        displaySize,
+        displayType,
+        cpu,
+        memory,
+        mainCamera,
+        selfieCamera,
+        batteryType,
+        chargingSpeed,
         price,
         isAchived,
         isFeatured,
@@ -86,21 +117,6 @@ export async function POST(
         updatedAt: new Date(),
       },
     });
-
-    // if (!product) {
-    //   return new NextResponse("Product Caretion Fail", { status: 400 });
-    // }
-
-    // await Promise.all(
-    //   images.map(async (image: Image) => {
-    //     await prismadb.image.create({
-    //       data: {
-    //         url: image.url,
-    //         productId: product.id,
-    //       },
-    //     });
-    //   })
-    // );
 
     return NextResponse.json(product);
   } catch (error) {

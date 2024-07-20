@@ -39,7 +39,7 @@ const ProductClient = ({ products }: { products: Product[] }) => {
         </Button>
       </div>
       <Separator />
-      <div className="container mx-auto py-10">
+      <div className="container mx-auto py-10 lg:max-h-[400px] overflow-y-auto">
         <DataTable
           searchKey="name"
           placeholder="search product...."
@@ -47,6 +47,8 @@ const ProductClient = ({ products }: { products: Product[] }) => {
           data={products}
         />
       </div>
+      <Separator />
+
       {/* Api Show Case */}
       <ProductApi />
     </>

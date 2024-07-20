@@ -10,7 +10,7 @@ const ProductApi = () => {
   const origin = useOrigin();
 
   return (
-    <div className="mt-3">
+    <div className="my-5">
       <Heading title="API For Product" />
       <div className="flex flex-col gap-2">
         <ApiAlert

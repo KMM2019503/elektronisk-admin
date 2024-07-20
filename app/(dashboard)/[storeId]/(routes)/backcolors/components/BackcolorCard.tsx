@@ -78,7 +78,7 @@ const BackcolorCard = ({ backcolor }: { backcolor: Backcolor }) => {
                 <div className="flex items-center gap-2 font-bold">
                   Color: {backcolor.value}
                   <div
-                    className="size-6 rounded-full"
+                    className="size-6 rounded-full shadow-2xl"
                     style={{ backgroundColor: backcolor.value }}
                   ></div>
                 </div>

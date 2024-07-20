@@ -1,8 +1,6 @@
 import prismadb from "@/lib/PrismaDB";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { Prisma } from "@prisma/client";
-import Category from "@/app/(dashboard)/[storeId]/(routes)/categories/page";
 
 // create new Category
 export async function POST(
@@ -84,6 +82,12 @@ export async function GET(
     const categories = await prismadb.category.findMany({
       where: {
         storeId: params.storeId,
+      },
+      include: {
+        billboard: true,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
