@@ -7,7 +7,12 @@ import {
   Order as OrderType,
   Product,
 } from "@prisma/client";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface OrderItem extends OrderItemType {
   product: Product;
@@ -31,16 +36,15 @@ const OrderCard = ({ order }: Orderprops) => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-center justify-around gap-3 md:gap-0">
             <div className="flex flex-col gap-2">
-              <CardTitle>{order.isPaid ? "Paid" : "Not Paid"}</CardTitle>
-              {/* <CardDescription>
+              <CardTitle>{order.id}</CardTitle>
+              <CardDescription>
                 <div className="flex items-center gap-2 font-bold">
-                  Color: {order.orderItems.product.price}
-                  <div
-                    className="size-6 rounded-full"
-                    style={{ backgroundColor: order.value }}
-                  ></div>
+                  <p>Product Count: {order.orderItem.length}</p>
                 </div>
-              </CardDescription> */}
+                <div className="flex items-center gap-2 font-bold">
+                  <p>isPaid: {order.isPaid ? "Done" : "On Progress"}</p>
+                </div>
+              </CardDescription>
             </div>
           </div>
         </CardHeader>

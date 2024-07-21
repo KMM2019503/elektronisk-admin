@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "Elektronisk-Admin",
   description: "Admin Dashboard",
   icons: {
-    icon: "/images/logo.png",
+    icon: "/logo.png",
   },
 };
 
