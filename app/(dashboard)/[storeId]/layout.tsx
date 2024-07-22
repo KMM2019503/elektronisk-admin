@@ -3,9 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
 
-// import { Toast } from "@/components/ui/toast";
-
-const DashboardLayout = async function DashboardLayout({
+const DashboardLayoutComponent = async function DashboardLayout({
   children,
   params,
 }: {
@@ -37,4 +35,4 @@ const DashboardLayout = async function DashboardLayout({
   );
 };
 
-export default DashboardLayout;
+export default DashboardLayoutComponent;
