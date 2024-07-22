@@ -39,7 +39,7 @@ const ProductClient = ({ products }: { products: Product[] }) => {
         </Button>
       </div>
       <Separator />
-      <div className="container mx-auto py-10 lg:max-h-[400px] overflow-y-auto">
+      <div className="container mx-auto py-4 lg:max-h-[400px] overflow-y-auto">
         <DataTable
           searchKey="name"
           placeholder="search product...."

@@ -10,6 +10,14 @@ import { LuPackagePlus } from "react-icons/lu";
 import { GetRevenue } from "@/actions/GetRevenue";
 import { GetSale } from "@/actions/GetSale";
 import { GetInStockProducts } from "@/actions/GetStockProduct";
+import { GetTopSaleProduct } from "@/actions/GetTopSaleProduct";
+import { BsGraphUpArrow } from "react-icons/bs";
+import Overview from "@/components/Overview";
+import { GetChartRevenue } from "@/actions/GetChartRevenue";
+import PieChartSlaeOrder from "@/components/PieChar";
+import { FaChartBar } from "react-icons/fa";
+import { TbChartPie4 } from "react-icons/tb";
+import { GetChartSaleCount } from "@/actions/GetChartSaleCount";
 
 const DashboardHome = async ({ params }: { params: { storeId: string } }) => {
   const store = await prismadb.store.findFirst({
@@ -21,6 +29,9 @@ const DashboardHome = async ({ params }: { params: { storeId: string } }) => {
   const revenue = await GetRevenue(params.storeId);
   const saleCount = await GetSale(params.storeId);
   const inStockProduct = await GetInStockProducts(params.storeId);
+  const topSaleProduct = await GetTopSaleProduct(params.storeId);
+  const chartData = await GetChartRevenue(params.storeId);
+  const saleCountPieChart = await GetChartSaleCount(params.storeId);
 
   if (!store) {
     return (
@@ -35,7 +46,7 @@ const DashboardHome = async ({ params }: { params: { storeId: string } }) => {
         <Heading title="Dashboard" desc="Overview of your store" />
         <Separator className="my-4" />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-medium">
@@ -65,6 +76,39 @@ const DashboardHome = async ({ params }: { params: { storeId: string } }) => {
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold">+{inStockProduct.length}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-sm font-medium">
+                Top Sale Product
+              </CardTitle>
+              <BsGraphUpArrow className="size-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-xl font-bold">{topSaleProduct.name}</div>
+            </CardContent>
+          </Card>
+          <Card className="col-span-1 md:col-span-2 lg:col-span-2">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-sm font-medium">
+                Revenue Bar Graph
+              </CardTitle>
+              <FaChartBar className="size-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <Overview data={chartData} />
+            </CardContent>
+          </Card>
+          <Card className="col-span-1 md:col-span-2 lg:col-span-2">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-sm font-medium">
+                Sale Count Chart
+              </CardTitle>
+              <TbChartPie4 className="size-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <PieChartSlaeOrder data={saleCountPieChart} />
             </CardContent>
           </Card>
         </div>

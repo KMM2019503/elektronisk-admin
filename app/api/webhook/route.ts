@@ -57,6 +57,7 @@ export async function POST(req: Request) {
           },
         },
         data: {
+          isFeatured: false,
           isAchived: true,
         },
       });

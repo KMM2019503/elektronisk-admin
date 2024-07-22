@@ -51,7 +51,12 @@ const MainNav = ({
   ];
 
   return (
-    <nav className={cn("flex space-x-2 lg:space-x-4", className)}>
+    <nav
+      className={cn(
+        "flex flex-col gap-y-6 lg:flex-row space-x-2 lg:space-x-4",
+        className
+      )}
+    >
       {routes.map((route, index) => (
         <Link
           href={route.href}
