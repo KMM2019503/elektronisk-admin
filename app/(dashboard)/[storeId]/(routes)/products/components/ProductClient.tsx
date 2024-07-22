@@ -12,6 +12,7 @@ import ProductApi from "./ProductApi";
 
 import { columns, Product } from "./columns";
 import { DataTable } from "../../../../../../components/ui/data-table";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const ProductClient = ({ products }: { products: Product[] }) => {
   const router = useRouter();
@@ -39,14 +40,16 @@ const ProductClient = ({ products }: { products: Product[] }) => {
         </Button>
       </div>
       <Separator />
-      <div className="container mx-auto py-4 lg:max-h-[400px] overflow-y-auto">
+
+      <ScrollArea className="w-full lg:h-[350px]">
         <DataTable
           searchKey="name"
           placeholder="search product...."
           columns={columns}
           data={products}
         />
-      </div>
+      </ScrollArea>
+
       <Separator />
 
       {/* Api Show Case */}

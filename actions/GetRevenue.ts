@@ -23,5 +23,5 @@ export const GetRevenue = async (storeId: string) => {
     return total + orderTotal;
   }, 0);
 
-  return totalPrice;
+  return totalPrice.toFixed(2);
 };

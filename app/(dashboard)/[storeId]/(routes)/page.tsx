@@ -33,6 +33,16 @@ const DashboardHome = async ({ params }: { params: { storeId: string } }) => {
   const chartData = await GetChartRevenue(params.storeId);
   const saleCountPieChart = await GetChartSaleCount(params.storeId);
 
+  // const fakeData = [
+  //   { name: "SUN", total: 4500 },
+  //   { name: "MON", total: 6030 },
+  //   { name: "TUE", total: 2300 },
+  //   { name: "WED", total: 1940 },
+  //   { name: "THU", total: 3849 },
+  //   { name: "FRI", total: 2450 },
+  //   { name: "SAT", total: 2000 },
+  // ];
+
   if (!store) {
     return (
       <>
@@ -56,8 +66,10 @@ const DashboardHome = async ({ params }: { params: { storeId: string } }) => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">${revenue}</div>
+              {/* <div className="text-2xl font-bold">$45670.89</div> */}
             </CardContent>
           </Card>
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-medium">Sales</CardTitle>
@@ -65,6 +77,7 @@ const DashboardHome = async ({ params }: { params: { storeId: string } }) => {
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold">+{saleCount.length}</div>
+              {/* <div className="text-2xl font-bold">+231</div> */}
             </CardContent>
           </Card>
           <Card>
@@ -76,6 +89,7 @@ const DashboardHome = async ({ params }: { params: { storeId: string } }) => {
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold">+{inStockProduct.length}</div>
+              {/* <div className="text-2xl font-bold">+98</div> */}
             </CardContent>
           </Card>
           <Card>
@@ -86,7 +100,7 @@ const DashboardHome = async ({ params }: { params: { storeId: string } }) => {
               <BsGraphUpArrow className="size-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold">{topSaleProduct.name}</div>
+              <div className="text-2xl font-bold">{topSaleProduct.name}</div>
             </CardContent>
           </Card>
           <Card className="col-span-1 md:col-span-2 lg:col-span-2">
@@ -98,8 +112,10 @@ const DashboardHome = async ({ params }: { params: { storeId: string } }) => {
             </CardHeader>
             <CardContent>
               <Overview data={chartData} />
+              {/* <Overview data={fakeData} /> */}
             </CardContent>
           </Card>
+
           <Card className="col-span-1 md:col-span-2 lg:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-medium">
