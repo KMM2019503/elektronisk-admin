@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 
 // import { Toast } from "@/components/ui/toast";
 
-export default async function ({
+const DashboardLayout = async function DashboardLayout({
   children,
   params,
 }: {
@@ -35,4 +35,6 @@ export default async function ({
       {children}
     </>
   );
-}
+};
+
+export default DashboardLayout;
