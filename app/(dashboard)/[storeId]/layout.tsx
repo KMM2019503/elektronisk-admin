@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
 
-const DashboardLayoutComponent = async function DashboardLayout({
+const DashboardLayoutComponent = async function DashboardLayoutComponent({
   children,
   params,
 }: {
@@ -34,5 +34,7 @@ const DashboardLayoutComponent = async function DashboardLayout({
     </>
   );
 };
+
+DashboardLayoutComponent.displayName = "DashboardLayoutComponent";
 
 export default DashboardLayoutComponent;
