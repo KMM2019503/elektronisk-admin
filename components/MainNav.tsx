@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
+import TransitionLink from "./ui/TransitionLink";
 
 const MainNav = ({
   className,
@@ -35,7 +35,7 @@ const MainNav = ({
     },
     {
       href: `/${params.storeId}/backcolors`,
-      label: "Back Colors",
+      label: "Colors",
       isActive: pathname === `/${params.storeId}/backcolors`,
     },
     {
@@ -51,25 +51,20 @@ const MainNav = ({
   ];
 
   return (
-    <nav
-      className={cn(
-        "flex flex-col gap-y-6 lg:flex-row space-x-2 lg:space-x-4",
-        className
-      )}
-    >
+    <nav className={cn("flex flex-col gap-y-6", className)}>
       {routes.map((route, index) => (
-        <Link
+        <TransitionLink
           href={route.href}
           key={index}
           className={cn(
-            "text-center text-sm lg:text-base font-medium transition-all hover:text-primary",
+            "text-center text-sm lg:text-base font-medium transition-all hover:text-primary hover:bg-zinc-100 py-1 px-5 mx-[30px] rounded-md ",
             route.isActive
-              ? "text-orange-500 dark:text-white"
+              ? "dark:text-white bg-zinc-100"
               : "text-muted-foreground"
           )}
         >
           {route.label}
-        </Link>
+        </TransitionLink>
       ))}
     </nav>
   );

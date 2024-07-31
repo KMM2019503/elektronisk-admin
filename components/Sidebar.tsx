@@ -1,4 +1,3 @@
-import { UserButton } from "@clerk/nextjs";
 import React from "react";
 
 import MainNav from "./MainNav";
@@ -7,6 +6,7 @@ import { auth } from "@clerk/nextjs/server";
 import prismadb from "@/lib/PrismaDB";
 import { redirect } from "next/navigation";
 import MobileNavBar from "./MobileNavBar";
+import { UserButton } from "@clerk/nextjs";
 
 const Navbar = async () => {
   const { userId } = auth();
@@ -21,20 +21,8 @@ const Navbar = async () => {
 
   return (
     <>
-      <div className="border-b">
-        <div className="flex h-14 w-full items-center justify-between px-5">
-          <StoreSwitcher items={stores} />
-          {/* <div className="hidden lg:block">
-            <MainNav />
-          </div> */}
-
-          <div className="flex items-center space-x-4">
-            <UserButton />
-          </div>
-          {/* <div className="lg:hidden">
-            <MobileNavBar />
-          </div> */}
-        </div>
+      <div className="hidden lg:flex flex-col h-full lg:max-w-[220px] items-center border-r pt-5 rounded-tr-2xl">
+        <MainNav />
       </div>
     </>
   );

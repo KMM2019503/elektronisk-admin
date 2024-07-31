@@ -2,6 +2,8 @@ import prismadb from "@/lib/PrismaDB";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import Loading from "./(routes)/loading";
+import Sidebar from "@/components/Sidebar";
 
 const DashboardLayoutComponent = async function DashboardLayoutComponent({
   children,
@@ -30,7 +32,12 @@ const DashboardLayoutComponent = async function DashboardLayoutComponent({
   return (
     <>
       <Navbar />
-      {children}
+      <div className="flex size-full">
+        <Sidebar />
+        <section id="main" className="w-full h-full">
+          {children}
+        </section>
+      </div>
     </>
   );
 };
