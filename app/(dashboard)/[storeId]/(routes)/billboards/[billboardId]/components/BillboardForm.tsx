@@ -30,7 +30,12 @@ interface BillboardFormProps {
 
 const formSchema = z.object({
   label: z.string().min(3),
-  imgUrl: z.string().min(5),
+  imgUrl: z
+    .string()
+    .min(5, {
+      message:
+        "Make sure the image is uploaded and Image URL must be at least 5 characters long",
+    }),
 });
 
 type BillboardFormValues = z.infer<typeof formSchema>;
@@ -169,7 +174,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
                     <UploadImageForm
                       value={field.value ? [field.value] : []}
                       disable={Loading}
-                      onChange={(url) => field.onChange(url)}
+                      onChange={(url) => field.onChange(url[0])}
                       onRemove={(url) => field.onChange("")}
                     />
                   </FormControl>

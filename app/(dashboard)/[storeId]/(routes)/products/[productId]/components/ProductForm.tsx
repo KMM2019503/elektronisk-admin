@@ -113,6 +113,7 @@ const ProductForm = ({
     const method = initialData ? "PATCH" : "POST";
 
     setLoading(true);
+
     try {
       const res = await fetch(api, {
         method: method,
@@ -518,8 +519,11 @@ const ProductForm = ({
                       <UploadImageForm
                         value={field.value.map((image) => image.url)}
                         disable={Loading}
-                        onChange={(url) =>
-                          field.onChange([...field.value, { url }])
+                        onChange={(urls) =>
+                          field.onChange([
+                            ...field.value,
+                            ...urls.map((url) => ({ url })),
+                          ])
                         }
                         onRemove={(url) => {
                           field.onChange([
