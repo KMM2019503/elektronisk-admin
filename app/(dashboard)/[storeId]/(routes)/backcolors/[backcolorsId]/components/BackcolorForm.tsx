@@ -78,7 +78,6 @@ const BackcolorForm = ({ initialData }: BackcolorFormProps) => {
         throw new Error(`Error: ${res.status} ${res.statusText}`);
       }
 
-      router.refresh();
       toast({
         title: toastMessage,
       });
@@ -117,7 +116,6 @@ const BackcolorForm = ({ initialData }: BackcolorFormProps) => {
         title: "Successfully Deleted",
       });
 
-      router.refresh();
       router.push(`/${params.storeId}/backcolors`);
     } catch (error) {
       setOpen(false);

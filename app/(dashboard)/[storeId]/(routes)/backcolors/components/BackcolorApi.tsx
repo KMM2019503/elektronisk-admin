@@ -20,7 +20,7 @@ const BackcolorApi = () => {
         />
         <ApiAlert
           title="GET"
-          desc={`${origin}/api/${params.storeId}/backcolors/{category ID}`}
+          desc={`${origin}/api/${params.storeId}/backcolors/{Backcolor ID}`}
           varient="public"
         />
       </div>

@@ -8,6 +8,9 @@ const Category = async ({ params }: { params: { storeId: string } }) => {
     where: {
       storeId: params.storeId.toString(),
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 
   return (
